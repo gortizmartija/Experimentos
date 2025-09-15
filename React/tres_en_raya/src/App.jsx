@@ -1,10 +1,11 @@
 import { useState } from "react";
-
+import confetti from "canvas-confetti";
+import { Cuadrado } from "./components/Cuadrado";
 import "./App.css";
 
 const TURNOS = {
-  X: "x",
-  O: "o",
+  X: "❌",
+  O: "⭕️",
 };
 
 const WINNER_COMBOS = [
@@ -18,23 +19,15 @@ const WINNER_COMBOS = [
   [2, 4, 6],
 ];
 
-const Cuadrado = ({ children, isSelected, updateBoard, index }) => {
-  const className = `square ${isSelected ? "is-selected" : null}`;
-
-  const handleClick = () => {
-    updateBoard(index);
-  };
-  return (
-    <div onClick={handleClick} className={className}>
-      {children}
-    </div>
-  );
-};
-
 function App() {
-  const [tablero, setTablero] = useState(Array(9).fill(null));
+  const [tablero, setTablero] = useState(() => {
+    const tableroFromStorage = window.localStorage.getItem("tablero");
+    return tableroFromStorage ? JSON.parse(tableroFromStorage) : Array(9).fill(null);
+  });
 
-  const [turno, setTurno] = useState(TURNOS.X);
+  const [turno, setTurno] = useState(() => {
+    const turnoFromStorage = window.localStorage.getItem("turno");
+    return turnoFromStorage ?? TURNOS.X});
 
   const [ganador, setGanador] = useState(null);
 
@@ -46,6 +39,9 @@ function App() {
 
     const nuevoTurno = turno === TURNOS.X ? TURNOS.O : TURNOS.X;
     setTurno(nuevoTurno);
+
+    window.localStorage.setItem("tablero", JSON.stringify(nuevoTablero));
+    window.localStorage.setItem("turno", nuevoTurno);
 
     if (checkWinner(nuevoTablero)) {
       setGanador(checkWinner(nuevoTablero));
@@ -60,6 +56,7 @@ function App() {
         nuevoTablero[a] === nuevoTablero[b] &&
         nuevoTablero[a] === nuevoTablero[c]
       ) {
+        confetti();
         return nuevoTablero[a];
       }
     }
@@ -73,6 +70,8 @@ function App() {
     setTablero(Array(9).fill(null));
     setGanador(null);
     setTurno(TURNOS.X);
+    window.localStorage.removeItem("tablero");
+    window.localStorage.removeItem("turno");
   };
 
   return (
