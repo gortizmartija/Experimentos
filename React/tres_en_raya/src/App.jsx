@@ -22,12 +22,15 @@ const WINNER_COMBOS = [
 function App() {
   const [tablero, setTablero] = useState(() => {
     const tableroFromStorage = window.localStorage.getItem("tablero");
-    return tableroFromStorage ? JSON.parse(tableroFromStorage) : Array(9).fill(null);
+    return tableroFromStorage
+      ? JSON.parse(tableroFromStorage)
+      : Array(9).fill(null);
   });
 
   const [turno, setTurno] = useState(() => {
     const turnoFromStorage = window.localStorage.getItem("turno");
-    return turnoFromStorage ?? TURNOS.X});
+    return turnoFromStorage ?? TURNOS.X;
+  });
 
   const [ganador, setGanador] = useState(null);
 
