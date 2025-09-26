@@ -1,11 +1,11 @@
-import { useState } from "react";
-import confetti from "canvas-confetti";
-import { Cuadrado } from "./components/Cuadrado";
-import "./App.css";
+import { useState } from 'react';
+import confetti from 'canvas-confetti';
+import { Cuadrado } from './components/Cuadrado';
+import './App.css';
 
 const TURNOS = {
-  X: "❌",
-  O: "⭕️",
+  X: '❌',
+  O: '⭕️',
 };
 
 const WINNER_COMBOS = [
@@ -21,14 +21,14 @@ const WINNER_COMBOS = [
 
 function App() {
   const [tablero, setTablero] = useState(() => {
-    const tableroFromStorage = window.localStorage.getItem("tablero");
+    const tableroFromStorage = window.localStorage.getItem('tablero');
     return tableroFromStorage
       ? JSON.parse(tableroFromStorage)
       : Array(9).fill(null);
   });
 
   const [turno, setTurno] = useState(() => {
-    const turnoFromStorage = window.localStorage.getItem("turno");
+    const turnoFromStorage = window.localStorage.getItem('turno');
     return turnoFromStorage ?? TURNOS.X;
   });
 
@@ -43,8 +43,8 @@ function App() {
     const nuevoTurno = turno === TURNOS.X ? TURNOS.O : TURNOS.X;
     setTurno(nuevoTurno);
 
-    window.localStorage.setItem("tablero", JSON.stringify(nuevoTablero));
-    window.localStorage.setItem("turno", nuevoTurno);
+    window.localStorage.setItem('tablero', JSON.stringify(nuevoTablero));
+    window.localStorage.setItem('turno', nuevoTurno);
 
     if (checkWinner(nuevoTablero)) {
       setGanador(checkWinner(nuevoTablero));
@@ -64,7 +64,7 @@ function App() {
       }
     }
     if (nuevoTablero.every((square) => square !== null)) {
-      return "Empate";
+      return 'Empate';
     }
     return null;
   };
@@ -73,16 +73,16 @@ function App() {
     setTablero(Array(9).fill(null));
     setGanador(null);
     setTurno(TURNOS.X);
-    window.localStorage.removeItem("tablero");
-    window.localStorage.removeItem("turno");
+    window.localStorage.removeItem('tablero');
+    window.localStorage.removeItem('turno');
   };
 
   return (
-    <main className="board">
+    <main className='board'>
       <h1>Tres en raya</h1>
       <button onClick={resertGame}>Resetear juego</button>
 
-      <section className="game">
+      <section className='game'>
         {tablero.map((value, index) => {
           return (
             <Cuadrado key={index} index={index} updateBoard={updateBoard}>
@@ -91,16 +91,16 @@ function App() {
           );
         })}
       </section>
-      <section className="turn">
+      <section className='turn'>
         <Cuadrado isSelected={turno == TURNOS.X}>{TURNOS.X}</Cuadrado>
         <Cuadrado isSelected={turno == TURNOS.O}>{TURNOS.O}</Cuadrado>
       </section>
 
       {ganador !== null && (
-        <section className="winner">
-          <div className="text">
-            <h2>{ganador == "Empate" ? "Empate" : "Gano"}</h2>
-            {ganador !== "Empate" ? (
+        <section className='winner'>
+          <div className='text'>
+            <h2>{ganador == 'Empate' ? 'Empate' : 'Gano'}</h2>
+            {ganador !== 'Empate' ? (
               <Cuadrado isSelected={true}>{ganador}</Cuadrado>
             ) : null}
             <button onClick={resertGame}>Empezar de nuevo</button>
