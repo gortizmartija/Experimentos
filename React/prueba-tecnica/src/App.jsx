@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { useEffect } from 'react';
+import './App.css';
+
+const CAT_ENDPOINT_FACT = 'https://catfact.ninja/fact';
+//const CAT_ENDPOINT_IMAGE_URL = `https://cataas.com/cat/says/${firstWord}`;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [fact, setFact] = useState();
+  const [factError, setFactError] = useState();
+  const [image, setImage] = useState();
+
+  useEffect(() => {
+    fetch(CAT_ENDPOINT_FACT)
+      .then((res) => {
+        if (!res.ok) throw new Error('No se ha encontrado el fact');
+        return res.json();
+      })
+      .then((data) => {
+        const { fact } = data;
+        setFact(fact);
+      })
+      .catch((error) => {
+        setFactError(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!fact) return;
+    const firstWord = fact.split(' ')[0];
+
+    fetch(
+      `https://cataas.com/cat/says/${firstWord}?size=50&color=red&json=true`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setImage(data.url);
+      });
+  }, [fact]);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Hola</h1>
+      {factError && <p>{factError}</p>}
+
+      {fact && <p>{fact}</p>}
+      {image && (
+        <img
+          src={image}
+          alt='{`Imagen sacada de la primera palabra ${fact}`}'
+        />
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
