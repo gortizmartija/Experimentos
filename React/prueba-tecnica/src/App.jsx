@@ -13,7 +13,7 @@ function App() {
       {imageURL && (
         <img
           src={imageURL}
-          alt='{`Imagen sacada de la primera palabra ${fact}`}'
+          alt={`Imagen sacada de la primera palabra ${fact}`}
         />
       )}
     </>
