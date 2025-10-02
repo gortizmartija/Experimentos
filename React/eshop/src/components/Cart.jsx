@@ -2,7 +2,7 @@ import './Cart.css';
 
 import { useId } from 'react';
 import { CartIcon, ClearCartIcon } from './Icons.jsx';
-// import { useCart } from '../hooks/useCart.js';
+import { useCart } from '../hooks/useCart.js';
 
 function CartItem({ thumbnail, price, title, quantity, addToCart }) {
   return (
@@ -22,7 +22,7 @@ function CartItem({ thumbnail, price, title, quantity, addToCart }) {
 
 export function Cart() {
   const cartCheckboxId = useId();
-  //   const { cart, clearCart, addToCart } = useCart();
+  const { cart, clearCart, addProduct } = useCart();
 
   return (
     <>
@@ -32,17 +32,19 @@ export function Cart() {
       <input id={cartCheckboxId} type='checkbox' hidden />
 
       <aside className='cart'>
-        {/* <ul>
-          {cart.map((product) => (
-            <CartItem
-              key={product.id}
-              addToCart={() => addToCart(product)}
-              {...product}
-            />
-          ))}
-        </ul> */}
+        {
+          <ul>
+            {cart.map((product) => (
+              <CartItem
+                key={product.id}
+                addToCart={() => addProduct(product)}
+                {...product}
+              />
+            ))}
+          </ul>
+        }
 
-        <button>
+        <button onClick={clearCart}>
           <ClearCartIcon />
         </button>
       </aside>

@@ -21,11 +21,20 @@ export function CartProvider({ children }) {
     ]);
   };
 
+  const removeProduct = (product) => {
+    return setCart((prevState) =>
+      prevState.filter((item) => item.id !== product.id)
+    );
+  };
+
   const clearCart = () => {
     setCart([]);
   };
+
   return (
-    <CartContext.Provider value={{ cart, setCart, addProduct, clearCart }}>
+    <CartContext.Provider
+      value={{ cart, setCart, addProduct, removeProduct, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
