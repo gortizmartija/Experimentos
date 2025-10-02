@@ -1,39 +1,34 @@
+import { useReducer } from 'react';
 import { CartContext } from './cartContext';
-import { useState } from 'react';
+import { reducerCart, intialStateCart } from '@/reducers/cart';
 
-//2. El Componente que lo envuelve
+function useCartReducer() {
+  const [state, dispatch] = useReducer(reducerCart, intialStateCart);
+
+  const addProduct = (product) =>
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: product,
+    });
+
+  const removeProduct = (product) =>
+    dispatch({
+      type: 'REMOVE_FROM_CART',
+      payload: product,
+    });
+
+  const clearCart = () => dispatch({ type: 'CLEAR_CART' });
+
+  return { state, addProduct, removeProduct, clearCart };
+}
+
+//Componente que provee la informacion del context
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
-
-  const addProduct = (product) => {
-    const productInCart = cart.findIndex((item) => item.id == product.id);
-    if (productInCart >= 0) {
-      const newCart = structuredClone(cart);
-      newCart[productInCart].quantity += 1;
-      return setCart(newCart);
-    }
-    setCart((prevState) => [
-      ...prevState,
-      {
-        ...product,
-        quantity: 1,
-      },
-    ]);
-  };
-
-  const removeProduct = (product) => {
-    return setCart((prevState) =>
-      prevState.filter((item) => item.id !== product.id)
-    );
-  };
-
-  const clearCart = () => {
-    setCart([]);
-  };
+  const { state, addProduct, removeProduct, clearCart } = useCartReducer();
 
   return (
     <CartContext.Provider
-      value={{ cart, setCart, addProduct, removeProduct, clearCart }}
+      value={{ cart: state, addProduct, removeProduct, clearCart }}
     >
       {children}
     </CartContext.Provider>
